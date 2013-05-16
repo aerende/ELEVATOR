@@ -116,7 +116,22 @@ describe "Rspec elevator - button third floor pressed " do
   end
 end
 
-describe "Rspec elevator - ground floor pressed" do
+describe "Rspec elevator - go to third floor then ground floor " do
+  it "should show third floor button pressed" do
+    e = EM::ElevatorController.new(4)
+    e.floor_array[3].pressed_button(1)
+    e.floor_array[3].pressed.should == 1
+  end
+  it "should move to the third floor" do
+    e = EM::ElevatorController.new(4)
+    e.floor_array[3].pressed_button(1)
+    e.move
+    e.move
+    e.move
+    e.move
+    e.floor_array[3].pressed.should == 0
+    e.instance_variable_get(:@e).instance_variable_get(:@current_floor).should == 3
+  end
   it "should show ground button pressed" do
     e = EM::ElevatorController.new(4)
     e.button_array[0].pressed_button(1)
