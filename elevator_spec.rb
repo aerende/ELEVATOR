@@ -48,18 +48,18 @@ module EM
         @button_array <<  Button.new(i)
         @floor_array  <<  Button.new(i)
       end
-      @e = Elevator.new(0, number_floors)
+      @elevator = Elevator.new(0, number_floors)
     end
 
 
     def move_up_or_down(button_move, b_array)
 
       b_array.each do |b|
-        if    ((b.pressed == 1) && (@e.current_floor < b.floor_number))
-          @e.move_up_one
+        if    ((b.pressed == 1) && (@elevator.current_floor < b.floor_number))
+          @elevator.move_up_one
           button_move = 1
-        elsif ((b.pressed == 1) && (@e.current_floor > b.floor_number))
-          @e.move_down_one
+        elsif ((b.pressed == 1) && (@elevator.current_floor > b.floor_number))
+          @elevator.move_down_one
           button_move = 1
         end
         if(button_move == 1) then break; end
@@ -71,8 +71,8 @@ module EM
   
     def move
 
-      @button_array[@e.current_floor].pressed_button(0)
-      @floor_array[@e.current_floor].pressed_button(0)
+      @button_array[@elevator.current_floor].pressed_button(0)
+      @floor_array[@elevator.current_floor].pressed_button(0)
 
 
       # move based on elevator button highest priority, then floor button
@@ -111,7 +111,7 @@ describe "Rspec elevator - button third floor pressed " do
     e.move
     e.move
     e.floor_array[3].pressed.should == 0
-    e.instance_variable_get(:@e).instance_variable_get(:@current_floor).should == 3
+    e.instance_variable_get(:@elevator).instance_variable_get(:@current_floor).should == 3
   end
 end
 
@@ -129,7 +129,7 @@ describe "Rspec elevator - go to third floor then ground floor " do
     e.move
     e.move
     e.floor_array[3].pressed.should == 0
-    e.instance_variable_get(:@e).instance_variable_get(:@current_floor).should == 3
+    e.instance_variable_get(:@elevator).instance_variable_get(:@current_floor).should == 3
   end
   it "should show ground button pressed" do
     e = EM::ElevatorController.new(4)
@@ -144,7 +144,7 @@ describe "Rspec elevator - go to third floor then ground floor " do
     e.move
     e.move
     e.button_array[0].pressed.should == 0
-    e.instance_variable_get(:@e).instance_variable_get(:@current_floor).should == 0
+    e.instance_variable_get(:@elevator).instance_variable_get(:@current_floor).should == 0
   end
 end
 
