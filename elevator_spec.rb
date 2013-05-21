@@ -51,21 +51,10 @@ module EM
       @e = Elevator.new(0, number_floors)
     end
 
-  
-    def move
-  
-      @button_array.each do |b|
-        if((b.pressed == 1) && (@e.current_floor == b.floor_number)) then b.pressed_button(0) end
-      end
-      @floor_array.each do |f|
-        if((f.pressed == 1) && (@e.current_floor == f.floor_number)) then f.pressed_button(0) end
-      end
-  
-      # move based on elevator button highest priority, then floor button
-  
-      button_move = 0
-  
-      @button_array.each do |b|
+
+    def move_up_or_down(button_move, b_array)
+
+      b_array.each do |b|
         if    ((b.pressed == 1) && (@e.current_floor < b.floor_number))
           @e.move_up_one
           button_move = 1
@@ -75,22 +64,32 @@ module EM
         end
         if(button_move == 1) then break; end
       end
+      button_move
+    end  # move_up_or_down
 
-      
-      if(button_move == 0)
-          @floor_array.each do |f|
-            if    ((f.pressed == 1) && (@e.current_floor < f.floor_number))
-              @e.move_up_one
-              button_move = 1
-            elsif ((f.pressed == 1) && (@e.current_floor > f.floor_number))
-              @e.move_down_one
-              button_move = 1
-            end
-            if(button_move == 1) then break; end
-          end    # floor_array
-        end      # if button_move == 0
+
   
-      end  # def move
+    def move
+
+      @button_array[@e.current_floor].pressed_button(0)
+      @floor_array[@e.current_floor].pressed_button(0)
+
+
+      # move based on elevator button highest priority, then floor button
+
+      button_move = 0
+
+      button_move = move_up_or_down(button_move, @button_array)
+
+      if(button_move == 0)
+        button_move = move_up_or_down(button_move, @floor_array)
+      end      # if button_move == 0
+
+    end  # def move
+
+
+  
+  
   
   end  # ElevatorController
   
